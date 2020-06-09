@@ -37,7 +37,7 @@ func TestParallel(t *testing.T) {
 		}
 	}
 	nt := Parallel(t1, t2, t3)
-	ne := nt.Run(context.Background())
+	ne := nt.Do(context.Background())
 	assert.Error(t, ne)
 	assert.False(t, t1r)
 	assert.True(t, t2r)
@@ -54,7 +54,7 @@ func TestParallelWithLimit(t *testing.T) {
 	var err = errors.New("test")
 	n := 100
 	l := 10
-	fn := rand.Intn(l)
+	fn := 3
 	trs := make([]bool, n, n)
 	ts := make([]Task, n, n)
 
@@ -89,7 +89,7 @@ func TestParallelWithLimit(t *testing.T) {
 	})
 
 	nt := ParallelWithLimit(l, ts...)
-	ne := nt.Run(context.Background())
+	ne := nt.Do(context.Background())
 	assert.Error(t, ne)
 
 	for i := 0; i < n; i++ {
@@ -138,7 +138,7 @@ func TestParallelFailSafe(t *testing.T) {
 		}
 	}
 	nt := ParallelFailSafe(t1, t2, t3)
-	ne := nt.Run(context.Background())
+	ne := nt.Do(context.Background())
 	assert.Error(t, ne)
 	assert.True(t, t1r)
 	assert.True(t, t2r)
@@ -155,7 +155,7 @@ func TestParallelFailSafeWithLimit(t *testing.T) {
 	var err = errors.New("test")
 	n := 100
 	l := 10
-	fn := rand.Intn(l)
+	fn := 3
 	trs := make([]bool, n, n)
 	ts := make([]Task, n, n)
 
@@ -190,7 +190,7 @@ func TestParallelFailSafeWithLimit(t *testing.T) {
 	})
 
 	nt := ParallelFailSafeWithLimit(l, ts...)
-	ne := nt.Run(context.Background())
+	ne := nt.Do(context.Background())
 	assert.Error(t, ne)
 
 	for i := 0; i < n; i++ {

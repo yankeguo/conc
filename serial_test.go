@@ -27,7 +27,7 @@ func TestSerial(t *testing.T) {
 		return err
 	}
 	nt := Serial(t1, t2, t3)
-	ne := nt.Run(context.Background())
+	ne := nt.Do(context.Background())
 	assert.Error(t, ne)
 	assert.True(t, t1r)
 	assert.True(t, t2r)
@@ -58,7 +58,7 @@ func TestSerialFailSafe(t *testing.T) {
 		return err
 	}
 	nt := SerialFailSafe(t1, t2, t3)
-	ne := nt.Run(context.Background())
+	ne := nt.Do(context.Background())
 	assert.Error(t, ne)
 	assert.True(t, t1r)
 	assert.True(t, t2r)

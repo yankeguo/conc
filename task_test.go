@@ -16,6 +16,6 @@ func TestTaskFunc_Run(t *testing.T) {
 		return err
 	}
 
-	assert.Equal(t, err, f.Run(context.Background()))
+	assert.Equal(t, err, f.Do(context.Background()))
 	assert.True(t, invoked)
 }
