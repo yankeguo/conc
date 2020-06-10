@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"math/rand"
+	"sync/atomic"
 	"testing"
 	"time"
 )
@@ -205,4 +206,41 @@ func TestParallelFailSafeWithLimit(t *testing.T) {
 			assert.Equal(t, nil, errs[i])
 		}
 	}
+}
+
+func TestParallelFailSafeWithLimit_EarlyCtxExit(t *testing.T) {
+	rand.Seed(time.Now().UnixNano())
+
+	var done int64
+
+	var tasks []Task
+	for i := 0; i < 100; i++ {
+		tasks = append(tasks, TaskFunc(func(ctx context.Context) error {
+			time.Sleep(time.Second)
+			atomic.AddInt64(&done, 1)
+			return nil
+		}))
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+
+	go func() {
+		time.Sleep(time.Millisecond * 100)
+		cancel()
+	}()
+
+	errs := ParallelFailSafeWithLimit(10, tasks...).Do(ctx).(Errs)
+
+	nf := 0
+
+	for _, err := range errs {
+		if err == nil {
+			nf++
+		} else {
+			assert.Equal(t, context.Canceled, err)
+		}
+	}
+
+	assert.Equal(t, 10, nf)
+	assert.Equal(t, int64(10), done)
 }
