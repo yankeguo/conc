@@ -1,6 +1,7 @@
 package conc
 
 import (
+	"context"
 	"strconv"
 	"strings"
 )
@@ -36,4 +37,19 @@ func (errs Errs) Sanitize() error {
 		}
 	}
 	return nil
+}
+
+// NoError wrap a Task and never returns error
+func NoError(task Task) Task {
+	return TaskFunc(func(ctx context.Context) error {
+		_ = task.Do(ctx)
+		return nil
+	})
+}
+
+// Error create Task always returns error
+func Error(err error) Task {
+	return TaskFunc(func(ctx context.Context) error {
+		return err
+	})
 }

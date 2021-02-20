@@ -25,6 +25,7 @@ func Parallel(tasks ...Task) Task {
 			}()
 		}
 		wg.Wait()
+		ctx2Cancel()
 		return errs.Sanitize()
 	})
 }
@@ -55,6 +56,7 @@ func ParallelWithLimit(limit int, tasks ...Task) Task {
 			}()
 		}
 		wg.Wait()
+		ctx2Cancel()
 		return errs.Sanitize()
 	})
 }
