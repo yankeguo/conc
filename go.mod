@@ -1,4 +1,4 @@
-module github.com/guoyk93/conc
+module github.com/yankeguo/conc
 
 go 1.14
 
