@@ -9,6 +9,18 @@ import (
 // Errs slice of error, may contain nils, user can known which task failed, which not failed
 type Errs []error
 
+// Unwrap implement errors.Wrapper interface
+func (errs Errs) Unwrap() []error {
+	var out []error
+	for _, err := range errs {
+		if err != nil {
+			out = append(out, err)
+		}
+	}
+	return out
+}
+
+// Error implement error interface
 func (errs Errs) Error() string {
 	sb := &strings.Builder{}
 	for i, err := range errs {

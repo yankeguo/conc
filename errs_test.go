@@ -3,9 +3,10 @@ package conc
 import (
 	"context"
 	"errors"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestErrs_Error(t *testing.T) {
@@ -22,6 +23,15 @@ func TestErrs_Sanitize(t *testing.T) {
 	assert.Equal(t, nil, errs.Sanitize())
 	errs = nil
 	assert.Equal(t, nil, errs.Sanitize())
+}
+
+func TestErrs_Unwrap(t *testing.T) {
+	err1 := errors.New("test1")
+	errs := Errs{err1, nil, errors.New("test2")}
+	assert.Equal(t, []error{errors.New("test1"), errors.New("test2")}, errs.Unwrap())
+	assert.True(t, errors.Is(errs, err1))
+	errs = nil
+	assert.Equal(t, []error(nil), errs.Unwrap())
 }
 
 func TestNoError(t *testing.T) {

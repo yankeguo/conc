@@ -3,11 +3,12 @@ package conc
 import (
 	"context"
 	"errors"
-	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestParallel(t *testing.T) {
@@ -51,13 +52,12 @@ func TestParallel(t *testing.T) {
 }
 
 func TestParallelWithLimit(t *testing.T) {
-	rand.Seed(time.Now().Unix())
 	var err = errors.New("test")
 	n := 100
 	l := 10
 	fn := 3
-	trs := make([]bool, n, n)
-	ts := make([]Task, n, n)
+	trs := make([]bool, n)
+	ts := make([]Task, n)
 
 	var cc int64
 	check := func() {
